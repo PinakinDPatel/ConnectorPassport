@@ -24,16 +24,11 @@ namespace Connecter
 {
     public partial class Form1 : Form
     {
-        string conString = "Server=" + ConfigurationManager.AppSettings["ServerName"].ToString() + "; Database=" + ConfigurationManager.AppSettings["DBName"].ToString() + "; User Id=pspcstore; Password=24#Prem#09#; Trusted_Connection=False; MultipleActiveResultSets=true";
-        
-        
-        //string conString = "Server=184.168.194.64; Database=pspctore; User Id=pspcstore; Password=24#Prem#09; Trusted_Connection=False; MultipleActiveResultSets=true";
-        //string conString = "Data Source=184.168.194.64;Initial Catalog=pspctore;Persist Security Info=True;User ID=pspcstore;Password=24#Prem#09#";
+        string conString = "Server=" + ConfigurationManager.AppSettings["ServerName"].ToString() + "; Database=" + ConfigurationManager.AppSettings["DBName"].ToString() + "; User Id=pspcstore; Password=Prem#12681#; Trusted_Connection=False; MultipleActiveResultSets=true";
         string storeId = ConfigurationManager.AppSettings.Get("StoreId");
         string posId = ConfigurationManager.AppSettings.Get("PosId");
         string sourcePath = ConfigurationManager.AppSettings.Get("SourcePath");
         string outPath = ConfigurationManager.AppSettings.Get("OutPath");
-
         public Form1()
         {
             Task task = new Task(() =>
@@ -61,11 +56,8 @@ namespace Connecter
                     //Progress();
                     Thread.Sleep(10000);
                 }
-
-                //ScanDataAltria();
             });
             task.Start();
-
             InitializeComponent();
         }
 
@@ -120,7 +112,6 @@ namespace Connecter
         {
             SqlConnection conn = new SqlConnection(conString);
             string errorFileName = "";
-
             try
             {
                 if (sourcePath != null && storeId != null && posId != null)
@@ -141,8 +132,8 @@ namespace Connecter
                             {
                                 if (str == "MCM")
                                 {
-                                    String Date = ds.Tables[3].Rows[0]["EndDate"].ToString();
-                                    string queryMCM = "select distinct EndDate,StoreId,POSId from MCM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
+                                    String Date = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                    string queryMCM = "select distinct EndDate,StoreId,POSId,MCMDetail_Id from MCM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
                                     conn.Open();
                                     DataTable dtmcm = new DataTable();
                                     SqlDataAdapter adtmcm = new SqlDataAdapter(queryMCM, conn);
@@ -153,24 +144,24 @@ namespace Connecter
                                     {
                                         for (int i = 0; i < ds.Tables["MCMSalesTotals"].Rows.Count; i++)
                                         {
-                                            String BeginDate = ds.Tables[3].Rows[0]["BeginDate"].ToString();
-                                            String BeginTime = ds.Tables[3].Rows[0]["BeginTime"].ToString();
-                                            String EndDate = ds.Tables[3].Rows[0]["EndDate"].ToString();
-                                            String EndTime = ds.Tables[3].Rows[0]["EndTime"].ToString();
-                                            String MerchandiseCode = ds.Tables[4].Rows[i]["MerchandiseCode"].ToString();
-                                            String MerchandiseCodeDescription = ds.Tables[4].Rows[i]["MerchandiseCodeDescription"].ToString();
-                                            String MCMDetail_Id = ds.Tables[4].Rows[i]["MCMDetail_Id"].ToString();
-                                            String DiscountAmount = ds.Tables[5].Rows[i]["DiscountAmount"].ToString();
-                                            String DiscountCount = ds.Tables[5].Rows[i]["DiscountCount"].ToString();
-                                            String PromotionAmount = ds.Tables[5].Rows[i]["PromotionAmount"].ToString();
-                                            String PromotionCount = ds.Tables[5].Rows[i]["PromotionCount"].ToString();
-                                            String RefundAmount = ds.Tables[5].Rows[i]["RefundAmount"].ToString();
-                                            String RefundCount = ds.Tables[5].Rows[i]["RefundCount"].ToString();
-                                            String SalesQuantity = ds.Tables[5].Rows[i]["SalesQuantity"].ToString();
-                                            String SalesAmount = ds.Tables[5].Rows[i]["SalesAmount"].ToString();
-                                            String TransactionCount = ds.Tables[5].Rows[i]["TransactionCount"].ToString();
-                                            String OpenDepartmentSalesAmount = ds.Tables[5].Rows[i]["OpenDepartmentSalesAmount"].ToString();
-                                            String OpenDepartmentTransactionCount = ds.Tables[5].Rows[i]["OpenDepartmentTransactionCount"].ToString();
+                                            string BeginDate = ds.Tables["MovementHeader"].Rows[0]["BeginDate"].ToString();
+                                            string BeginTime = ds.Tables["MovementHeader"].Rows[0]["BeginTime"].ToString();
+                                            string EndDate = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                            string EndTime = ds.Tables["MovementHeader"].Rows[0]["EndTime"].ToString();
+                                            string MerchandiseCode = ds.Tables["MCMDetail"].Rows[i]["MerchandiseCode"].ToString();
+                                            string MerchandiseCodeDescription = ds.Tables["MCMDetail"].Rows[i]["MerchandiseCodeDescription"].ToString();
+                                            string MCMDetail_Id = ds.Tables["MCMDetail"].Rows[i]["MCMDetail_Id"].ToString();
+                                            string DiscountAmount = ds.Tables["MCMSalesTotals"].Rows[i]["DiscountAmount"].ToString();
+                                            string DiscountCount = ds.Tables["MCMSalesTotals"].Rows[i]["DiscountCount"].ToString();
+                                            string PromotionAmount = ds.Tables["MCMSalesTotals"].Rows[i]["PromotionAmount"].ToString();
+                                            string PromotionCount = ds.Tables["MCMSalesTotals"].Rows[i]["PromotionCount"].ToString();
+                                            string RefundAmount = ds.Tables["MCMSalesTotals"].Rows[i]["RefundAmount"].ToString();
+                                            string RefundCount = ds.Tables["MCMSalesTotals"].Rows[i]["RefundCount"].ToString();
+                                            string SalesQuantity = ds.Tables["MCMSalesTotals"].Rows[i]["SalesQuantity"].ToString();
+                                            string SalesAmount = ds.Tables["MCMSalesTotals"].Rows[i]["SalesAmount"].ToString();
+                                            string TransactionCount = ds.Tables["MCMSalesTotals"].Rows[i]["TransactionCount"].ToString();
+                                            string OpenDepartmentSalesAmount = ds.Tables["MCMSalesTotals"].Rows[i]["OpenDepartmentSalesAmount"].ToString();
+                                            string OpenDepartmentTransactionCount = ds.Tables["MCMSalesTotals"].Rows[i]["OpenDepartmentTransactionCount"].ToString();
                                             int pjrflg = 1;
                                             if (dtmcm.Rows.Count == 0)
                                             {
@@ -180,7 +171,7 @@ namespace Connecter
                                             {
                                                 for (int k = 0; k < dtmcm.Rows.Count; k++)
                                                 {
-                                                    if (dtmcm.Rows[k]["EndDate"].ToString() == EndDate && dtmcm.Rows[k]["StoreId"].ToString() == storeId)
+                                                    if (dtmcm.Rows[k]["EndDate"].ToString() == EndDate && dtmcm.Rows[k]["MCMDetail_Id"].ToString() == MCMDetail_Id && dtmcm.Rows[k]["StoreId"].ToString() == storeId)
                                                     {
                                                         pjrflg = 1;
                                                         break;
@@ -204,8 +195,8 @@ namespace Connecter
                                 }
                                 if (str == "MSM")
                                 {
-                                    string Date = ds.Tables[3].Rows[0]["EndDate"].ToString();
-                                    string queryMSM = "select EndDate,StoreId,POSId from MSM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
+                                    string Date = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                    string queryMSM = "select EndDate,StoreId,POSId,MSMDetail_Id from MSM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
                                     conn.Open();
                                     DataTable dtmsm = new DataTable();
                                     SqlDataAdapter adtmsm = new SqlDataAdapter(queryMSM, conn);
@@ -216,19 +207,19 @@ namespace Connecter
                                     {
                                         for (int i = 0; i < ds.Tables["MSMDetail"].Rows.Count; i++)
                                         {
-                                            string BeginDate = ds.Tables[3].Rows[0]["BeginDate"].ToString();
-                                            string BeginTime = ds.Tables[3].Rows[0]["BeginTime"].ToString();
-                                            string EndDate = ds.Tables[3].Rows[0]["EndDate"].ToString();
-                                            string EndTime = ds.Tables[3].Rows[0]["EndTime"].ToString();
-                                            string MSMDetail_Id = ds.Tables[4].Rows[i]["MSMDetail_Id"].ToString();
-                                            string MiscellaneousSummaryCode = ds.Tables[5].Rows[i]["MiscellaneousSummaryCode"].ToString();
-                                            string MiscellaneousSummarySubCode = ds.Tables[5].Rows[i]["MiscellaneousSummarySubCode"].ToString();
-                                            string MiscellaneousSummarySubCodeModifier = ds.Tables[5].Rows[i]["MiscellaneousSummarySubCodeModifier"].ToString();
-                                            string MSMSalesTotals_Id = ds.Tables[6].Rows[i]["MSMSalesTotals_Id"].ToString();
-                                            string MiscellaneousSummaryAmount = ds.Tables[6].Rows[i]["MiscellaneousSummaryAmount"].ToString();
-                                            string MiscellaneousSummaryCount = ds.Tables[6].Rows[i]["MiscellaneousSummaryCount"].ToString();
-                                            string TenderCode = ds.Tables[7].Rows[i]["TenderCode"].ToString();
-                                            string TenderSubCode = ds.Tables[7].Rows[i]["TenderSubCode"].ToString();
+                                            string BeginDate = ds.Tables["MovementHeader"].Rows[0]["BeginDate"].ToString();
+                                            string BeginTime = ds.Tables["MovementHeader"].Rows[0]["BeginTime"].ToString();
+                                            string EndDate = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                            string EndTime = ds.Tables["MovementHeader"].Rows[0]["EndTime"].ToString();
+                                            string MSMDetail_Id = ds.Tables["MSMDetail"].Rows[i]["MSMDetail_Id"].ToString();
+                                            string MiscellaneousSummaryCode = ds.Tables["MiscellaneousSummaryCodes"].Rows[i]["MiscellaneousSummaryCode"].ToString();
+                                            string MiscellaneousSummarySubCode = ds.Tables["MiscellaneousSummaryCodes"].Rows[i]["MiscellaneousSummarySubCode"].ToString();
+                                            string MiscellaneousSummarySubCodeModifier = ds.Tables["MiscellaneousSummaryCodes"].Rows[i]["MiscellaneousSummarySubCodeModifier"].ToString();
+                                            string MSMSalesTotals_Id = ds.Tables["MSMSalesTotals"].Rows[i]["MSMSalesTotals_Id"].ToString();
+                                            string MiscellaneousSummaryAmount = ds.Tables["MSMSalesTotals"].Rows[i]["MiscellaneousSummaryAmount"].ToString();
+                                            string MiscellaneousSummaryCount = ds.Tables["MSMSalesTotals"].Rows[i]["MiscellaneousSummaryCount"].ToString();
+                                            string TenderCode = ds.Tables["Tender"].Rows[i]["TenderCode"].ToString();
+                                            string TenderSubCode = ds.Tables["Tender"].Rows[i]["TenderSubCode"].ToString();
                                             int pjrflg = 1;
                                             if (dtmsm.Rows.Count == 0)
                                             {
@@ -238,7 +229,7 @@ namespace Connecter
                                             {
                                                 for (int k = 0; k < dtmsm.Rows.Count; k++)
                                                 {
-                                                    if (dtmsm.Rows[k]["EndDate"].ToString() == EndDate && dtmsm.Rows[k]["StoreId"].ToString() == storeId)
+                                                    if (dtmsm.Rows[k]["EndDate"].ToString() == EndDate && dtmsm.Rows[k]["MSMDetail_Id"].ToString() == MSMDetail_Id && dtmsm.Rows[k]["StoreId"].ToString() == storeId)
                                                     {
                                                         pjrflg = 1;
                                                         break;
@@ -325,13 +316,16 @@ namespace Connecter
                                     string SuspendFlag_value = null;
                                     string date = null;
                                     string traId = null;
+                                    bool voidTrans = false;
+                                    string PromotionID = null;
+                                    string PromotionAmount = null;
+                                    string DiscountAmount = null;
 
                                     if (ds.Tables.Contains("SaleEvent")) { date = ds.Tables["SaleEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["SaleEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("OtherEvent")) { date = ds.Tables["OtherEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["OtherEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("VoidEvent")) { date = ds.Tables["VoidEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["VoidEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("FinancialEvent")) { date = ds.Tables["FinancialEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["FinancialEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("RefundEvent")) { date = ds.Tables["RefundEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["RefundEvent"].Rows[0]["TransactionID"].ToString(); }
-
 
                                     string queryTrans = "select TransactionID,EventEndTime,Storeid,POSId from TransactionPJR where Storeid='" + storeId + "' and POSId='" + posId + "' and EventEndDate='" + date + "' and TransactionId='" + traId + "'";
                                     conn.Open();
@@ -468,6 +462,7 @@ namespace Connecter
                                                 ReceiptTime = ds.Tables["VoidEvent"].Rows[0]["ReceiptTime"].ToString();
                                             if (ds.Tables["SuspendFlag"].Columns.Contains("value"))
                                                 SuspendFlag_value = ds.Tables["SuspendFlag"].Rows[0]["value"].ToString();
+                                            voidTrans = true;
                                         }
                                         else if (ds.Tables.Contains("FinancialEvent"))
                                         {
@@ -585,7 +580,7 @@ namespace Connecter
                                         }
                                         if (pjrflg != 1)
                                         {
-                                            string Query = "insert into TransactionPJR VALUES('" + TransactionID + "','" + EventStartDate + "','" + EventStartTime + "','" + EventEndDate + "','" + EventEndTime + "','" + TransactionTotalGrossAmount + "','" + TransactionTotalNetAmount + "','" + TransactionTotalTaxSalesAmount + "','" + TransactionTotalTaxExemptAmount + "','" + TransactionTotalTaxNetAmount + "','" + TransactionTotalGrandAmount_Text + "','" + storeId + "','Sales Transaction','" + posId + "')";
+                                            string Query = "insert into TransactionPJR VALUES('" + TransactionID + "','" + EventStartDate + "','" + EventStartTime + "','" + EventEndDate + "','" + EventEndTime + "','" + TransactionTotalGrossAmount + "','" + TransactionTotalNetAmount + "','" + TransactionTotalTaxSalesAmount + "','" + TransactionTotalTaxExemptAmount + "','" + TransactionTotalTaxNetAmount + "','" + TransactionTotalGrandAmount_Text + "','" + storeId + "','Sales Transaction','" + posId + "','" + voidTrans + "')";
                                             conn.Open();
                                             SqlCommand cmd = new SqlCommand();
                                             cmd = new SqlCommand(Query, conn);
@@ -649,6 +644,40 @@ namespace Connecter
                                             {
                                                 method = ds.Tables["EntryMethod"].Rows[i]["method"].ToString();
                                             }
+
+                                            if (ds.Tables.Contains("Promotion"))
+                                            {
+                                                if (ds.Tables["Promotion"].Columns.Contains("FuelLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["FuelLine"].Rows[i]["FuelLine_Id"].ToString() == ds.Tables["Promotion"].Rows[z]["FuelLine_Id"].ToString())
+                                                        {
+                                                            if (ds.Tables["Promotion"].Columns.Contains("PromotionID"))
+                                                                PromotionID = ds.Tables["Promotion"].Rows[z]["PromotionID"].ToString();
+                                                            else if (ds.Tables.Contains("PromotionID"))
+                                                            {
+                                                                PromotionID = ds.Tables["PromotionID"].Rows[z]["type"].ToString();
+                                                            }
+                                                            PromotionAmount = ds.Tables["Promotion"].Rows[z]["PromotionAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (ds.Tables.Contains("Discount"))
+                                            {
+                                                if (ds.Tables["Discount"].Columns.Contains("FuelLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["FuelLine"].Rows[i]["FuelLine_Id"].ToString() == ds.Tables["Discount"].Rows[z]["FuelLine_Id"].ToString())
+                                                        {
+                                                            DiscountAmount = ds.Tables["Discount"].Rows[i]["DiscountAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                             if (ds.Tables["ItemTax"].Columns.Contains("TaxLevelID"))
                                             {
                                                 for (int j = 0; j < ds.Tables["ItemTax"].Rows.Count; j++)
@@ -698,7 +727,7 @@ namespace Connecter
                                             }
                                             if (pjrflg != 1)
                                             {
-                                                string Query = "insert into FuelPJR VALUES('" + TransactionID + "','normal','" + F_FuelGradeID + "','" + F_FuelpostionID + "','" + F_PriceTierCode + "','" + F_TimeTierCode + "','" + F_ServiceLevelCode + "','" + F_Description + "','" + method + "','" + F_ActualSalesPrice + "','" + F_MerchandiseCode + "','" + F_RegularSellPrice + "','" + F_SalesQuantity + "','" + F_SalesAmount + "','" + TaxLevelID + "','" + storeId + "','" + FuelLine_id + "','Fuel Sales','" + posId + "','" + EventEndDate + "')";
+                                                string Query = "insert into FuelPJR VALUES('" + TransactionID + "','normal','" + F_FuelGradeID + "','" + F_FuelpostionID + "','" + F_PriceTierCode + "','" + F_TimeTierCode + "','" + F_ServiceLevelCode + "','" + F_Description + "','" + method + "','" + F_ActualSalesPrice + "','" + F_MerchandiseCode + "','" + F_RegularSellPrice + "','" + F_SalesQuantity + "','" + F_SalesAmount + "','" + TaxLevelID + "','" + storeId + "','" + FuelLine_id + "','Fuel Sales','" + posId + "','" + EventEndDate + "','" + DiscountAmount + "','" + PromotionID + "','" + PromotionAmount + "')";
                                                 conn.Open();
                                                 SqlCommand cmd = new SqlCommand();
                                                 cmd = new SqlCommand(Query, conn);
@@ -733,6 +762,39 @@ namespace Connecter
                                                 SalesAmount = ds.Tables["ItemLine"].Rows[i]["SalesAmount"].ToString();
                                             if (ds.Tables["ItemTax"].Columns.Contains("TaxLevelID"))
                                                 TaxLevelID = ds.Tables["ItemTax"].Rows[i]["TaxLevelID"].ToString();
+
+                                            if (ds.Tables.Contains("Promotion"))
+                                            {
+                                                if (ds.Tables["Promotion"].Columns.Contains("ItemLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["ItemLine"].Rows[i]["ItemLine_Id"].ToString() == ds.Tables["Promotion"].Rows[z]["ItemLine_Id"].ToString())
+                                                        {
+                                                            if (ds.Tables["Promotion"].Columns.Contains("PromotionID"))
+                                                                PromotionID = ds.Tables["Promotion"].Rows[z]["PromotionID"].ToString();
+                                                            else if (ds.Tables.Contains("PromotionID"))
+                                                            {
+                                                                PromotionID = ds.Tables["PromotionID"].Rows[z]["type"].ToString();
+                                                            }
+                                                            PromotionAmount = ds.Tables["Promotion"].Rows[z]["PromotionAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if (ds.Tables.Contains("Discount"))
+                                            {
+                                                if (ds.Tables["Discount"].Columns.Contains("ItemLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["ItemLine"].Rows[i]["ItemLine_Id"].ToString() == ds.Tables["Discount"].Rows[z]["ItemLine_Id"].ToString())
+                                                        {
+                                                            DiscountAmount = ds.Tables["Discount"].Rows[i]["DiscountAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
 
                                             if (ds.Tables["ItemTax"].Columns.Contains("TaxLevelID"))
                                             {
@@ -785,7 +847,7 @@ namespace Connecter
                                                 {
                                                     Description = Description.Replace("'", " ");
                                                 }
-                                                string Query = "insert into ItemPJR VALUES('" + TransactionID + "','normal','" + format + "','" + POSCode + "','" + Description + "','" + method + "','" + ActualSalesPrice + "','" + MerchandiseCode + "','" + SellingUnits + "','" + RegularSellPrice + "','" + SalesQuantity + "','" + SalesAmount + "','" + TaxLevelID + "','" + storeId + "','" + ItemLine_Id + "','Items Sales','" + posId + "','" + EventEndDate + "')";
+                                                string Query = "insert into ItemPJR VALUES('" + TransactionID + "','normal','" + format + "','" + POSCode + "','" + Description + "','" + method + "','" + ActualSalesPrice + "','" + MerchandiseCode + "','" + SellingUnits + "','" + RegularSellPrice + "','" + SalesQuantity + "','" + SalesAmount + "','" + TaxLevelID + "','" + storeId + "','" + ItemLine_Id + "','Items Sales','" + posId + "','" + EventEndDate + "','" + PromotionID + "','" + PromotionAmount + "','" + DiscountAmount + "')";
                                                 conn.Open();
                                                 SqlCommand cmd = new SqlCommand();
                                                 cmd = new SqlCommand(Query, conn);
@@ -810,9 +872,47 @@ namespace Connecter
                                                 M_SalesQuantity = ds.Tables["MerchandiseCodeLine"].Rows[i]["SalesQuantity"].ToString();
                                             if (ds.Tables["MerchandiseCodeLine"].Columns.Contains("SalesAmount"))
                                                 M_SalesAmount = ds.Tables["MerchandiseCodeLine"].Rows[i]["SalesAmount"].ToString();
-                                            if (ds.Tables["ItemTax"].Columns.Contains("TaxLevelID"))
+
+                                            if (ds.Tables.Contains("Promotion"))
                                             {
-                                                TaxLevelID = ds.Tables["ItemTax"].Rows[i]["TaxLevelID"].ToString();
+                                                if (ds.Tables["Promotion"].Columns.Contains("MerchandiseCodeLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["MerchandiseCodeLine"].Rows[i]["MerchandiseCodeLine_Id"].ToString() == ds.Tables["Promotion"].Rows[z]["MerchandiseCodeLine_Id"].ToString())
+                                                        {
+                                                            if (ds.Tables["Promotion"].Columns.Contains("PromotionID"))
+                                                                PromotionID = ds.Tables["Promotion"].Rows[z]["PromotionID"].ToString();
+                                                            else if (ds.Tables.Contains("PromotionID"))
+                                                            {
+                                                                PromotionID = ds.Tables["PromotionID"].Rows[z]["type"].ToString();
+                                                            }
+                                                            PromotionAmount = ds.Tables["Promotion"].Rows[z]["PromotionAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (ds.Tables.Contains("Discount"))
+                                            {
+                                                if (ds.Tables["Discount"].Columns.Contains("MerchandiseCodeLine_Id"))
+                                                {
+                                                    for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
+                                                    {
+                                                        if (ds.Tables["MerchandiseCodeLine"].Rows[i]["MerchandiseCodeLine_Id"].ToString() == ds.Tables["Discount"].Rows[z]["MerchandiseCodeLine_Id"].ToString())
+                                                        {
+                                                            DiscountAmount = ds.Tables["Discount"].Rows[i]["DiscountAmount"].ToString();
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (ds.Tables.Contains("ItemTax"))
+                                            {
+                                                if (ds.Tables["ItemTax"].Columns.Contains("TaxLevelID"))
+                                                {
+                                                    TaxLevelID = ds.Tables["ItemTax"].Rows[i]["TaxLevelID"].ToString();
+                                                }
                                             }
                                             if (SuspendFlag_value == "yes")
                                             {
@@ -845,7 +945,7 @@ namespace Connecter
                                             }
                                             if (pjrflg != 1)
                                             {
-                                                string Query = "insert into MerchandisePJR VALUES('" + TransactionID + "','normal','" + M_Description + "','" + M_MerchandiseCode + "','" + M_ActualSalesPrice + "','" + M_SalesQuantity + "','" + M_RegularSellPrice + "','" + M_SalesAmount + "','" + TaxLevelID + "','" + storeId + "','Merchandise Sales','" + posId + "','" + EventEndDate + "')";
+                                                string Query = "insert into MerchandisePJR VALUES('" + TransactionID + "','normal','" + M_Description + "','" + M_MerchandiseCode + "','" + M_ActualSalesPrice + "','" + M_SalesQuantity + "','" + M_RegularSellPrice + "','" + M_SalesAmount + "','" + TaxLevelID + "','" + storeId + "','Merchandise Sales','" + posId + "','" + EventEndDate + "','" + DiscountAmount + "','" + PromotionID + "','" + PromotionAmount + "')";
                                                 conn.Open();
                                                 SqlCommand cmd = new SqlCommand();
                                                 cmd = new SqlCommand(Query, conn);
@@ -859,7 +959,19 @@ namespace Connecter
                                         for (int i = 0; i < ds.Tables["TenderInfo"].Rows.Count; i++)
                                         {
                                             if (ds.Tables["TenderInfo"].Columns.Contains("TenderAmount"))
-                                                TenderAmount = ds.Tables["TenderInfo"].Rows[i]["TenderAmount"].ToString();
+                                            {
+                                                if (ds.Tables.Contains("ChangeFlag"))
+                                                {
+                                                    if (ds.Tables["ChangeFlag"].Rows[i]["value"].ToString() == "yes")
+                                                    {
+                                                        TenderAmount = (Convert.ToDecimal(ds.Tables["TenderInfo"].Rows[i]["TenderAmount"]) * -1).ToString();
+                                                    }
+                                                    else
+                                                    {
+                                                        TenderAmount = ds.Tables["TenderInfo"].Rows[i]["TenderAmount"].ToString();
+                                                    }
+                                                }
+                                            }
                                             if (ds.Tables["TenderInfo"].Columns.Contains("TenderInfo_Id"))
                                                 TenderInfo_Id = ds.Tables["TenderInfo"].Rows[i]["TenderInfo_Id"].ToString();
                                             if (ds.Tables.Contains("Tender"))
@@ -984,7 +1096,6 @@ namespace Connecter
                 {
                     Directory.CreateDirectory(errorpath);
                 }
-
                 if (!Directory.Exists(filepath))
                 {
                     Directory.CreateDirectory(filepath);
@@ -1005,7 +1116,6 @@ namespace Connecter
                     sw.WriteLine(line);
                     sw.Flush();
                     sw.Close();
-
                 }
                 if (ErrorLocation == "Root element is missing.")
                 {
@@ -1014,10 +1124,9 @@ namespace Connecter
                 }
                 Application.Restart();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Application.Restart();
-                // e.ToString();
             }
         }
 

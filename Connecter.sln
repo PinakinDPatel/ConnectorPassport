@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1525
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connecter", "Connecter.csproj", "{3F848B71-6923-4C9C-A2A6-0248EDA9B275}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ConnectorSetUp", "..\ConnectorSetUp\ConnectorSetUp.vdproj", "{A719A4DE-BF60-4D80-9561-D92E47AAA91D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +15,6 @@ Global
 		{3F848B71-6923-4C9C-A2A6-0248EDA9B275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F848B71-6923-4C9C-A2A6-0248EDA9B275}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F848B71-6923-4C9C-A2A6-0248EDA9B275}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A719A4DE-BF60-4D80-9561-D92E47AAA91D}.Debug|Any CPU.ActiveCfg = Debug
-		{A719A4DE-BF60-4D80-9561-D92E47AAA91D}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
