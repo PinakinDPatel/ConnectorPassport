@@ -19,6 +19,8 @@ using System.Text;
 using System.Collections;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Connecter
 {
@@ -69,7 +71,7 @@ namespace Connecter
             {
                 if (posId != null && storeId != null && outPath != null)
                 {
-                    string query = "select id,xmlname,xmlcontent from  xmlout where Storeid='" + storeId + "'";
+                    string query = "select id,xmlname,xmlcontent,Storeid from  xmlout where Storeid='" + storeId + "'";
                     conn.Open();
                     DataTable dtxml = new DataTable();
                     SqlDataAdapter adp = new SqlDataAdapter(query, conn);
@@ -99,6 +101,8 @@ namespace Connecter
                             cmd.ExecuteNonQuery();
                             conn.Close();
                         }
+                        var xmlListFile = CreateXmlListFile(dtxml);
+
                     }
                 }
             }
@@ -106,6 +110,33 @@ namespace Connecter
             {
                 SendErrorToText(ex, errorFileName);
             }
+        }
+
+        public string CreateXmlListFile(DataTable result)
+        {
+            var xmlSerializer = new XmlSerializer(result.GetType());
+            var xdoc = new XDocument(
+                       new XElement("FileList",
+                       result.AsEnumerable().Select(w =>
+                       new XElement("File", w["xmlname"]))));
+
+            try
+            {
+                var outxmlpath = outPath + "FILEMANIFEST_" + DateTime.Now.ToString("yyyyMMdd").ToString();
+                XmlTextWriter writer = new XmlTextWriter(outxmlpath, System.Text.Encoding.UTF8);
+                DataSet dsxmlcontet = new DataSet();
+                string encodedXml = WebUtility.HtmlDecode(xdoc.ToString());
+                writer.Close();
+                XmlDocument xdoc1 = new XmlDocument();
+                xdoc1.LoadXml(encodedXml);
+                xdoc1.Save(outxmlpath);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return xdoc.ToString();
         }
 
         private void PassportRead()
