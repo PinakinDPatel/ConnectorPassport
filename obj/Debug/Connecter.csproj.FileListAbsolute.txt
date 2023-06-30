@@ -1,0 +1,17 @@
+D:\Vivo-Soft\Connector\Passport\bin\Debug\Connecter.exe.config
+D:\Vivo-Soft\Connector\Passport\bin\Debug\Connecter.exe
+D:\Vivo-Soft\Connector\Passport\bin\Debug\Connecter.pdb
+D:\Vivo-Soft\Connector\Passport\bin\Debug\ExcelDataReader.dll
+D:\Vivo-Soft\Connector\Passport\bin\Debug\Newtonsoft.Json.dll
+D:\Vivo-Soft\Connector\Passport\bin\Debug\ExcelDataReader.pdb
+D:\Vivo-Soft\Connector\Passport\bin\Debug\ExcelDataReader.xml
+D:\Vivo-Soft\Connector\Passport\bin\Debug\Newtonsoft.Json.xml
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.csproj.AssemblyReference.cache
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.csproj.SuggestedBindingRedirects.cache
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.exe.config
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.Form1.resources
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.csproj.GenerateResource.cache
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.csproj.CoreCompileInputs.cache
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.csproj.CopyComplete
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.exe
+D:\Vivo-Soft\Connector\Passport\obj\Debug\Connecter.pdb

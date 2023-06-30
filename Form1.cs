@@ -122,7 +122,7 @@ namespace Connecter
 
             try
             {
-                var outxmlpath = outPath + "FILEMANIFEST_" + DateTime.Now.ToString("yyyyMMdd").ToString();
+                var outxmlpath = outPath + "FILEMANIFEST_" + DateTime.Now.ToString("yyMMddHHmmss").ToString();
                 XmlTextWriter writer = new XmlTextWriter(outxmlpath, System.Text.Encoding.UTF8);
                 DataSet dsxmlcontet = new DataSet();
                 string encodedXml = WebUtility.HtmlDecode(xdoc.ToString());
