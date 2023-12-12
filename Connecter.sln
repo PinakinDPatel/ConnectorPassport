@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33627.172
+# Visual Studio 15
+VisualStudioVersion = 15.0.33919.361
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connecter", "Connecter.csproj", "{3F848B71-6923-4C9C-A2A6-0248EDA9B275}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ConnectorP", "..\ConnectorP\ConnectorP.vdproj", "{F7759414-4836-4E9F-8D5F-AAD6BB91CBA3}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ConnectorPassport", "..\ConnectorPassport\ConnectorPassport.vdproj", "{B79E3D7A-AEB0-4710-8481-FD1B67E7E9EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +21,8 @@ Global
 		{3F848B71-6923-4C9C-A2A6-0248EDA9B275}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7759414-4836-4E9F-8D5F-AAD6BB91CBA3}.Debug|Any CPU.ActiveCfg = Debug
 		{F7759414-4836-4E9F-8D5F-AAD6BB91CBA3}.Release|Any CPU.ActiveCfg = Release
+		{B79E3D7A-AEB0-4710-8481-FD1B67E7E9EE}.Debug|Any CPU.ActiveCfg = Debug
+		{B79E3D7A-AEB0-4710-8481-FD1B67E7E9EE}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

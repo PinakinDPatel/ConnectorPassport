@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,14 +8,8 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Xml;
 using System.Threading;
-using System.Net.Mail;
 using System.Net;
-using ExcelDataReader;
-using System.Globalization;
-using System.Net.Cache;
 using Newtonsoft.Json;
-using System.Text;
-using System.Collections;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Xml.Linq;
@@ -41,7 +34,7 @@ namespace Connecter
                     var timeHour = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("HH");
                     var timeMin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("mm");
 
-                    if (dayName == "Monday" && timeHour == "00" && (int.Parse(timeMin) >= 0 && int.Parse(timeMin) <= 20))
+                    if (dayName == "TuesDay" && timeHour == "00" && (int.Parse(timeMin) >= 0 && int.Parse(timeMin) <= 20))
                     {
                         // For ScanData.
                         ScanDataRJR();
@@ -86,7 +79,8 @@ namespace Connecter
                             var outxmlpath = outPath + dtxml.Rows[i]["xmlname"].ToString();
                             XmlTextWriter writer = new XmlTextWriter(outxmlpath, System.Text.Encoding.UTF8);
                             DataSet dsxmlcontet = new DataSet();
-                            string encodedXml = WebUtility.HtmlDecode(dtxml.Rows[i]["xmlcontent"].ToString());
+                            string encodedXml = WebUtility.HtmlDecode(dtxml.Rows[i]["xmlcontent"].ToString()
+                                .Replace("&", "&amp;").Replace("'", "&apos;").Replace("\"", "&quot;").Replace(">", "&gt;").Replace("<", "&lt;"));
                             writer.Close();
                             XmlDocument xdoc = new XmlDocument();
                             xdoc.LoadXml(encodedXml);
@@ -101,7 +95,7 @@ namespace Connecter
                             cmd.ExecuteNonQuery();
                             conn.Close();
                         }
-                        var xmlListFile = CreateXmlListFile(dtxml);
+                        //var xmlListFile = CreateXmlListFile(dtxml);
 
                     }
                 }
@@ -1166,8 +1160,19 @@ namespace Connecter
             string errorFileName = "";
             try
             {
-                var startdate = "2020-01-01";// TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MM/dd/yyyy").Replace("-", "/");
-                var enddate = "2021-06-01"; // TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MM/dd/yyyy").Replace("-", "/");
+                //var startdate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MM/dd/yyyy").Replace("-", "/");
+                //var enddate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("MM/dd/yyyy").Replace("-", "/");
+
+                DateTime nextWednesday = DateTime.Now.AddDays(-1);
+                while (nextWednesday.DayOfWeek != DayOfWeek.Saturday)
+                    nextWednesday = nextWednesday.AddDays(-1);
+                DateTime lastWednesday = DateTime.Now.AddDays(-8);
+                while (lastWednesday.DayOfWeek != DayOfWeek.Sunday)
+                    lastWednesday = lastWednesday.AddDays(-1);
+
+                var startdate = lastWednesday.ToString("MM/dd/yyyy").Replace("-", "/");
+                var enddate = nextWednesday.ToString("MM/dd/yyyy").Replace("-", "/");
+
                 if (startdate != null && enddate != null && storeId != null && posId != null)
                 {
                     DataSet ds = new DataSet("ScanData");
@@ -1226,7 +1231,7 @@ namespace Connecter
 
                         if (dtFile.Rows.Count != 0)
                         {
-                            string end_date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("yyyy/MM/dd").Replace("-", "");
+                            string end_date = nextWednesday.ToString("yyyy/MM/dd").Replace("-", "");
                             string fileName = (dtFile.Rows[0].ItemArray[6].ToString() + end_date).Replace(" ", "") + ".txt";
                             string fileNamePath = Path.GetFullPath(fileName);
                             StreamWriter writer = new StreamWriter(fileNamePath);
@@ -1245,7 +1250,7 @@ namespace Connecter
                             writer.Close();
                             string from = fileNamePath;
                             //string to = "ftp://APIMobile.vivo-soft.com/" + fileName.Replace(".txt", "");
-                            string to = ""; // "ftp://" + ftppath + "/" + fileName.Replace(".txt", "");
+                            string to =  "sFTP://" + ftppath + "/" + fileName.Replace(".txt", "");
                             //string user = "mobileapi";
                             //string pass = "09#Prem#24";
                             string user = dtScandataSetting.Rows[0]["UserName"].ToString();
