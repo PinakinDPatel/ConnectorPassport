@@ -14,6 +14,8 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Renci.SshNet;
+using Renci.SshNet.Sftp;
 
 namespace Connecter
 {
@@ -24,6 +26,7 @@ namespace Connecter
         string posId = ConfigurationManager.AppSettings.Get("PosId");
         string sourcePath = ConfigurationManager.AppSettings.Get("SourcePath");
         string outPath = ConfigurationManager.AppSettings.Get("OutPath");
+        bool isSend = false;
         public Form1()
         {
             Task task = new Task(() =>
@@ -33,12 +36,12 @@ namespace Connecter
                     var dayName = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("dddd");
                     var timeHour = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("HH");
                     var timeMin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("mm");
-
-                    if (dayName == "TuesDay" && timeHour == "00" && (int.Parse(timeMin) >= 0 && int.Parse(timeMin) <= 20))
+                    if (dayName == "TuesDay" && isSend == false)
                     {
                         // For ScanData.
                         ScanDataRJR();
                         ScanDataAltria();
+                        isSend = true;
                     }
                     else
                     {
@@ -47,6 +50,10 @@ namespace Connecter
                             PassportWrite();
                             PassportRead();
                         }
+                    }
+                    if (dayName != "TuesDay")
+                    {
+                        isSend = false;
                     }
                     //Progress();
                     Thread.Sleep(10000);
@@ -145,6 +152,7 @@ namespace Connecter
                     {
                         if (File.Exists(XMlFile))
                         {
+                            var folderName = "";
                             errorFileName = XMlFile;
                             DataSet ds = new DataSet();
                             ds.ReadXml(XMlFile);
@@ -158,6 +166,7 @@ namespace Connecter
                                 if (str == "MCM")
                                 {
                                     String Date = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                    folderName = Date;
                                     string queryMCM = "select distinct EndDate,StoreId,POSId,MCMDetail_Id from MCM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
                                     conn.Open();
                                     DataTable dtmcm = new DataTable();
@@ -221,6 +230,7 @@ namespace Connecter
                                 if (str == "MSM")
                                 {
                                     string Date = ds.Tables["MovementHeader"].Rows[0]["EndDate"].ToString();
+                                    folderName = Date;
                                     string queryMSM = "select EndDate,StoreId,POSId,MSMDetail_Id from MSM where Storeid='" + storeId + "' and POSId='" + posId + "' and EndDate='" + Date + "'";
                                     conn.Open();
                                     DataTable dtmsm = new DataTable();
@@ -351,7 +361,7 @@ namespace Connecter
                                     else if (ds.Tables.Contains("VoidEvent")) { date = ds.Tables["VoidEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["VoidEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("FinancialEvent")) { date = ds.Tables["FinancialEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["FinancialEvent"].Rows[0]["TransactionID"].ToString(); }
                                     else if (ds.Tables.Contains("RefundEvent")) { date = ds.Tables["RefundEvent"].Rows[0]["EventEndDate"].ToString(); traId = ds.Tables["RefundEvent"].Rows[0]["TransactionID"].ToString(); }
-
+                                    folderName = date;
                                     string queryTrans = "select TransactionID,EventEndTime,Storeid,POSId from TransactionPJR where Storeid='" + storeId + "' and POSId='" + posId + "' and EventEndDate='" + date + "' and TransactionId='" + traId + "'";
                                     conn.Open();
                                     DataTable dtTrans = new DataTable();
@@ -1063,8 +1073,22 @@ namespace Connecter
                                 {
                                     Directory.CreateDirectory(copyPath);
                                 }
-                                File.Copy(XMlFile, copyPath + Path.GetFileName(XMlFile), true);
+                                string copyPathDate = copyPath + folderName + "\\";
+                                if (!Directory.Exists(copyPathDate))
+                                {
+                                    Directory.CreateDirectory(copyPathDate);
+                                }
+
+                                File.Copy(XMlFile, copyPathDate + Path.GetFileName(XMlFile), true);
                                 File.Delete(XMlFile);
+
+                                string deleteFolder = copyPath + Convert.ToDateTime(folderName).AddMonths(-1).ToString("yyyy-MM-dd");
+                                if (Directory.Exists(deleteFolder))
+                                {
+                                    var dir = new DirectoryInfo(deleteFolder);
+                                    dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+                                    dir.Delete(true);
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -1243,22 +1267,29 @@ namespace Connecter
                             writer.WriteLine(dtFile.Rows.Count + "|" + sumQuantity + "|" + sumFinalSalesPrice + "|" + "PSPCStore");
                             foreach (DataRow row in dtFile.AsEnumerable())
                             {
-                                writer.WriteLine(string.Join("|", row.ItemArray.Select(x => x.ToString())) + "|");
+                                //writer.WriteLine(string.Join("|", row.ItemArray.Select(x => x.ToString())) + "|");
+                                writer.WriteLine(string.Join("|", row.ItemArray.Select(x => x.ToString())));
                             }
-                            string ftppath = dtScandataSetting.Rows[0]["FTPPath"].ToString();
+                            string ftppath = dtScandataSetting.Rows[0]["Server"].ToString();
 
                             writer.Close();
                             string from = fileNamePath;
                             //string to = "ftp://APIMobile.vivo-soft.com/" + fileName.Replace(".txt", "");
-                            string to =  "sFTP://" + ftppath + "/" + fileName.Replace(".txt", "");
+                            string to = "sFTP://" + ftppath + "/" + fileName.Replace(".txt", "");
                             //string user = "mobileapi";
                             //string pass = "09#Prem#24";
                             string user = dtScandataSetting.Rows[0]["UserName"].ToString();
                             string pass = dtScandataSetting.Rows[0]["Password"].ToString();
 
-                            WebClient client = new WebClient();
-                            client.Credentials = new NetworkCredential(user, pass);
-                            client.UploadFile(to, WebRequestMethods.Ftp.UploadFile, from);
+                            //WebClient client = new WebClient();
+                            //client.Credentials = new NetworkCredential(user, pass);
+                            //client.UploadFile(to, WebRequestMethods.Ftp.UploadFile, from);
+
+                            SftpClient sftpClient = new SftpClient(ftppath, user, pass);
+                            sftpClient.Connect();
+                            FileStream fs = new FileStream(from, FileMode.Open);
+                            sftpClient.UploadFile(fs, Path.GetFileName(from));
+                            sftpClient.Dispose();
                         }
                     }
                 }
