@@ -36,7 +36,7 @@ namespace Connecter
                     var dayName = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("dddd");
                     var timeHour = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("HH");
                     var timeMin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("mm");
-                    if (dayName == "TuesDay" && isSend == false)
+                    if (dayName == "Tuesday" && isSend == false)
                     {
                         // For ScanData.
                         ScanDataRJR();
@@ -682,6 +682,8 @@ namespace Connecter
 
                                             if (ds.Tables.Contains("Promotion"))
                                             {
+                                                PromotionID = null;
+                                                PromotionAmount = null;
                                                 if (ds.Tables["Promotion"].Columns.Contains("FuelLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
@@ -701,6 +703,7 @@ namespace Connecter
                                             }
                                             if (ds.Tables.Contains("Discount"))
                                             {
+                                                DiscountAmount = null;
                                                 if (ds.Tables["Discount"].Columns.Contains("FuelLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
@@ -800,6 +803,8 @@ namespace Connecter
 
                                             if (ds.Tables.Contains("Promotion"))
                                             {
+                                                PromotionID = null;
+                                                PromotionAmount = null;
                                                 if (ds.Tables["Promotion"].Columns.Contains("ItemLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
@@ -819,6 +824,7 @@ namespace Connecter
                                             }
                                             if (ds.Tables.Contains("Discount"))
                                             {
+                                                DiscountAmount = null;
                                                 if (ds.Tables["Discount"].Columns.Contains("ItemLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
@@ -910,6 +916,8 @@ namespace Connecter
 
                                             if (ds.Tables.Contains("Promotion"))
                                             {
+                                                PromotionID = null;
+                                                PromotionAmount = null;
                                                 if (ds.Tables["Promotion"].Columns.Contains("MerchandiseCodeLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Promotion"].Rows.Count; z++)
@@ -930,6 +938,7 @@ namespace Connecter
 
                                             if (ds.Tables.Contains("Discount"))
                                             {
+                                                DiscountAmount = null;
                                                 if (ds.Tables["Discount"].Columns.Contains("MerchandiseCodeLine_Id"))
                                                 {
                                                     for (int z = 0; z < ds.Tables["Discount"].Rows.Count; z++)
@@ -1081,13 +1090,15 @@ namespace Connecter
 
                                 File.Copy(XMlFile, copyPathDate + Path.GetFileName(XMlFile), true);
                                 File.Delete(XMlFile);
-
-                                string deleteFolder = copyPath + Convert.ToDateTime(folderName).AddMonths(-1).ToString("yyyy-MM-dd");
-                                if (Directory.Exists(deleteFolder))
+                                if (str == "MCM" || str == "MSM" || str == "PJR")
                                 {
-                                    var dir = new DirectoryInfo(deleteFolder);
-                                    dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
-                                    dir.Delete(true);
+                                    string deleteFolder = copyPath + Convert.ToDateTime(folderName).AddMonths(-1).ToString("yyyy-MM-dd");
+                                    if (Directory.Exists(deleteFolder))
+                                    {
+                                        var dir = new DirectoryInfo(deleteFolder);
+                                        dir.Attributes = dir.Attributes & ~FileAttributes.ReadOnly;
+                                        dir.Delete(true);
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -1257,8 +1268,17 @@ namespace Connecter
                         {
                             string end_date = nextWednesday.ToString("yyyy/MM/dd").Replace("-", "");
                             string fileName = (dtFile.Rows[0].ItemArray[6].ToString() + end_date).Replace(" ", "") + ".txt";
-                            string fileNamePath = Path.GetFullPath(fileName);
-                            StreamWriter writer = new StreamWriter(fileNamePath);
+                            //string fileNamePath = Path.GetFullPath(fileName);
+
+                            string fileNamePath = Path.GetDirectoryName(Application.StartupPath); //Path.GetFullPath(fileName);
+                            string copyPath = fileNamePath + "\\ScanData\\";
+                            if (!Directory.Exists(copyPath))
+                            {
+                                Directory.CreateDirectory(copyPath);
+                            }
+                            copyPath = copyPath + fileName;
+
+                            StreamWriter writer = new StreamWriter(copyPath);
 
 
                             int sumQuantity = Convert.ToInt32(dtFile.Compute("SUM(Quantity)", string.Empty));
