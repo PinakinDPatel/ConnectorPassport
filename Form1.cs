@@ -22,8 +22,8 @@ namespace Connecter
     public partial class Form1 : Form
     {
         string conString = "Server=" + ConfigurationManager.AppSettings["ServerName"].ToString() + "; Database=" + ConfigurationManager.AppSettings["DBName"].ToString() + "; User Id=pspcstore; Password=Prem#12681#; Trusted_Connection=False; MultipleActiveResultSets=true";
-        string storeId = ConfigurationManager.AppSettings.Get("StoreId");
-        string posId = ConfigurationManager.AppSettings.Get("PosId");
+        string storeId = AppCommon.StoreId(ConfigurationManager.AppSettings.Get("Key"));
+        string posId = AppCommon.POSId(ConfigurationManager.AppSettings.Get("Key"));
         string sourcePath = ConfigurationManager.AppSettings.Get("SourcePath");
         string outPath = ConfigurationManager.AppSettings.Get("OutPath");
         bool isSend = false;
