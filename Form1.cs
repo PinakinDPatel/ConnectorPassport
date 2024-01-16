@@ -1293,7 +1293,7 @@ namespace Connecter
                             string ftppath = dtScandataSetting.Rows[0]["Server"].ToString();
 
                             writer.Close();
-                            string from = fileNamePath;
+                            string from = copyPath;
                             //string to = "ftp://APIMobile.vivo-soft.com/" + fileName.Replace(".txt", "");
                             string to = "sFTP://" + ftppath + "/" + fileName.Replace(".txt", "");
                             //string user = "mobileapi";
