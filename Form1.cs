@@ -1266,7 +1266,7 @@ namespace Connecter
 
                         if (dtFile.Rows.Count != 0)
                         {
-                            string end_date = nextWednesday.ToString("yyyy/MM/dd").Replace("-", "");
+                            string end_date = (nextWednesday.ToString("yyyy/MM/dd").Replace("-", "")).Replace("/","");
                             string fileName = (dtFile.Rows[0].ItemArray[6].ToString() + end_date).Replace(" ", "") + ".txt";
                             //string fileNamePath = Path.GetFullPath(fileName);
 
