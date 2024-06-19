@@ -43,14 +43,13 @@ namespace Connecter
                         ScanDataAltria();
                         isSend = true;
                     }
-                    else
+
+                    if (sourcePath != null && storeId != null && posId != null && outPath != null)
                     {
-                        if (sourcePath != null && storeId != null && posId != null && outPath != null)
-                        {
-                            PassportWrite();
-                            PassportRead();
-                        }
+                        PassportWrite();
+                        PassportRead();
                     }
+
                     if (dayName != "TuesDay")
                     {
                         isSend = false;
@@ -1266,7 +1265,7 @@ namespace Connecter
 
                         if (dtFile.Rows.Count != 0)
                         {
-                            string end_date = (nextWednesday.ToString("yyyy/MM/dd").Replace("-", "")).Replace("/","");
+                            string end_date = (nextWednesday.ToString("yyyy/MM/dd").Replace("-", "")).Replace("/", "");
                             string fileName = (dtFile.Rows[0].ItemArray[6].ToString() + end_date).Replace(" ", "") + ".txt";
                             //string fileNamePath = Path.GetFullPath(fileName);
 
