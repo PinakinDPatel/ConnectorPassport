@@ -1,4 +1,6 @@
-﻿namespace Connecter
+﻿using System;
+
+namespace Connecter
 {
     partial class Form1
     {
@@ -34,7 +36,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(122, 23);
+            this.ClientSize = new System.Drawing.Size(120, 23);
             this.ControlBox = false;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -47,7 +49,6 @@
             this.ResumeLayout(false);
 
         }
-
         #endregion
     }
 }
