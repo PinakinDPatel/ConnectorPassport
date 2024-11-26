@@ -1476,7 +1476,7 @@ namespace Connecter
                         }
                         if (dtFile.Rows.Count != 0)
                         {
-                            string end_date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("yyyy/MM/dd").Replace("-", "");
+                            string end_date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time")).ToString("yyyy/MM/dd").Replace("-", "").Replace("/", "");
                             string fileName = (dtFile.Rows[0].ItemArray[0].ToString() + "_" + end_date).Replace(" ", "") + ".json";
                             dtFile.Columns["OutletName"].ColumnName = "Outlet Name";
                             dtFile.Columns["OutletNumber"].ColumnName = "Outlet Number";
