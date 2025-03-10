@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3F848B71-6923-4C9C-A2A6-0248EDA9B275}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Connecter</RootNamespace>
-    <AssemblyName>Connecter</AssemblyName>
+    <RootNamespace>Connector</RootNamespace>
+    <AssemblyName>Connector</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
